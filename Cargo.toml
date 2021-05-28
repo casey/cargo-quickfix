@@ -1,0 +1,30 @@
+[package]
+name        = "cargo-quickfix"
+version     = "0.0.0"
+description = "Populate Vim quickfix files with Cargo messages"
+authors     = ["Casey Rodarmor <casey@rodarmor.com>"]
+license     = "CC0-1.0"
+homepage    = "https://github.com/casey/cargo-quickfix"
+repository  = "https://github.com/casey/cargo-quickfix"
+edition     = "2018"
+resolver    = "2"
+categories  = ["command-line-utilities", "development-tools"]
+keywords    = ["command-line", "development", "utility"]
+autotests   = false
+
+[dependencies]
+cargo_metadata     = "0.13.1"
+env_logger         = "0.8.3"
+libc               = "0.2.95"
+log                = "0.4.14"
+snafu              = "0.6.10"
+strip-ansi-escapes = "0.1.0"
+structopt          = "0.3.21"
+
+[dev-dependencies]
+executable-path = "1.0.0"
+tempfile        = "3.2.0"
+
+[[test]]
+name = "integration"
+path = "tests/lib.rs"
