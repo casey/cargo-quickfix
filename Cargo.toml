@@ -1,0 +1,19 @@
+[package]
+name        = "quickfix"
+version     = "0.0.0"
+description = "Populate Vim quickfix files with Cargo messages"
+authors     = ["Casey Rodarmor <casey@rodarmor.com>"]
+license     = "CC0-1.0"
+homepage    = "https://github.com/casey/quickfix"
+repository  = "https://github.com/casey/quickfix"
+edition     = "2018"
+resolver    = "2"
+categories  = ["command-line-utilities", "development-tools"]
+keywords    = ["command-line", "development", "utility"]
+
+[dev-dependencies]
+tempfile = "3.2.0"
+
+[dependencies]
+cargo_metadata = "0.13.1"
+structopt      = "0.3.21"
