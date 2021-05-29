@@ -4,10 +4,12 @@ mod common;
 mod environment;
 mod format_string;
 mod formatted_message;
-mod output;
 mod output_stream;
 mod subcommand;
 mod token;
+
+#[cfg(test)]
+mod output;
 
 fn main() {
   Environment::main().run();

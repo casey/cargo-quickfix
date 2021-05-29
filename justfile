@@ -1,2 +1,2 @@
-watch:
-  cargo watch --clear --exec test
+watch +COMMAND='test':
+  cargo watch --clear --exec "{{COMMAND}}"
