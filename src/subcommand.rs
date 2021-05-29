@@ -45,13 +45,7 @@ impl Subcommand {
         Message::CompilerMessage(message) => {
           println!("{:?}", message);
           if message.message.level == DiagnosticLevel::Error {
-            if let Some(span) = message
-              .message
-              .spans
-              .iter()
-              .filter(|span| span.is_primary)
-              .next()
-            {
+            if let Some(span) = message.message.spans.iter().find(|span| span.is_primary) {
               writeln!(
                 errorfile,
                 "{}",
