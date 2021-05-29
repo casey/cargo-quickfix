@@ -37,7 +37,13 @@ impl Display for FormatString {
         Token::File => write!(f, "%f,")?,
         Token::Line => write!(f, "%l,")?,
         Token::Message => write!(f, "%m,")?,
-        Token::Text(text) => write!(f, "{}", text.replace(' ', "\\ "))?,
+        Token::Text(text) =>
+          for c in text.chars() {
+            match c {
+              ' ' => write!(f, "\\ ")?,
+              c => write!(f, "{}", c)?,
+            }
+          },
       }
 
       last = Some(*token)

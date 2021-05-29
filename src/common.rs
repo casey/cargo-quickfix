@@ -2,9 +2,8 @@ pub(crate) use std::{
   env,
   ffi::OsString,
   fmt::{self, Display, Formatter},
-  fs::{self, File},
+  fs::File,
   io::{self, BufReader, Cursor, Read, Stdout, Write},
-  iter,
   path::Path,
   str,
 };
@@ -19,5 +18,15 @@ pub(crate) use ::{
 
 pub(crate) use crate::{
   environment::Environment, format_string::FormatString, formatted_message::FormattedMessage,
-  output::Output, output_stream::OutputStream, subcommand::Subcommand, token::Token,
+  output_stream::OutputStream, subcommand::Subcommand, token::Token,
 };
+
+#[cfg(test)]
+mod test {
+  pub(crate) use std::{fs, iter, path};
+
+  pub(crate) use crate::output::Output;
+}
+
+#[cfg(test)]
+pub(crate) use test::*;
