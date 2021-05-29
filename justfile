@@ -6,6 +6,9 @@ ci:
 pr: ci
   gh pr create --web
 
+push: ci
+  git push
+
 build:
   cargo build --all
 
