@@ -3,6 +3,9 @@ all: build test clippy fmt-check forbid check-install
 ci:
   RUSTFLAGS='--deny warnings' just all
 
+pr: ci
+  gh pr create --web
+
 build:
   cargo build --all
 
