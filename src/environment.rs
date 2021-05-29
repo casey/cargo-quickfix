@@ -57,9 +57,10 @@ impl Environment {
   }
 
   pub(crate) fn run(mut self) {
-    Subcommand::from_iter_safe(&self.args)
-      .unwrap()
-      .run(&mut self);
+    match Subcommand::from_iter_safe(&self.args) {
+      Ok(subcommand) => subcommand.run(&mut self),
+      Err(error) => error.exit(),
+    }
   }
 
   #[cfg(test)]
