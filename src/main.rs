@@ -71,6 +71,7 @@ column: 11
 message: expected one of `:`, `;`, `=`, `@`, or `|`, found `foo`
 ---
 "
+      .replace('/', &path::MAIN_SEPARATOR.to_string()),
     );
   }
 

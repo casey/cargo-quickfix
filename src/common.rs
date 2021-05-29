@@ -23,7 +23,7 @@ pub(crate) use crate::{
 
 #[cfg(test)]
 mod test {
-  pub(crate) use std::{fs, iter};
+  pub(crate) use std::{fs, iter, path};
 
   pub(crate) use crate::output::Output;
 }
