@@ -2,6 +2,7 @@ use crate::common::*;
 
 pub(crate) struct Output {
   pub(crate) stdout: String,
+  pub(crate) stderr: String,
   pub(crate) dir:    Box<dyn AsRef<Path>>,
 }
 

@@ -27,12 +27,15 @@ impl Subcommand {
   }
 
   fn write(environment: &mut Environment) -> Result<()> {
-    let mut errorfile = File::create(environment.current_dir().join(".errorfile")).unwrap();
+    let path = environment.current_dir().join(".errorfile");
+
+    let mut errorfile = File::create(&path).context(error::Filesystem { path: &path })?;
 
     let reader = BufReader::new(environment.stdin());
 
-    for message in Message::parse_stream(reader) {
-      match message.unwrap() {
+    for result in Message::parse_stream(reader) {
+      let message = result.context(error::Stdin)?;
+      match message {
         Message::BuildFinished(finished) => {
           println!("{:?}", finished);
         },
@@ -51,8 +54,10 @@ impl Subcommand {
                 "{}",
                 Self::ERROR.format(span, &message.message.message)
               )
-              .unwrap();
-              errorfile.flush().unwrap();
+              .context(error::Filesystem { path: &path })?;
+              errorfile
+                .flush()
+                .context(error::Filesystem { path: &path })?;
             }
           }
         },
@@ -67,8 +72,7 @@ impl Subcommand {
   }
 
   fn errorformat(environment: &mut Environment) -> Result<()> {
-    write!(environment.stdout(), "{}", Self::ERROR).unwrap();
-
+    outln!(environment, "{}", Self::ERROR)?;
     Ok(())
   }
 }

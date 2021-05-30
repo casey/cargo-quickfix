@@ -1,5 +1,8 @@
 use crate::common::*;
 
+#[macro_use]
+mod outln;
+
 mod common;
 mod environment;
 mod error;
@@ -7,6 +10,7 @@ mod format_string;
 mod formatted_message;
 mod output_stream;
 mod result;
+mod result_ext;
 mod subcommand;
 mod token;
 
@@ -14,7 +18,7 @@ mod token;
 mod output;
 
 fn main() {
-  if let Err(code) = Environment::main().run() {
+  if let Err(code) = Environment::main() {
     process::exit(code);
   }
 }
@@ -85,7 +89,7 @@ message: expected one of `:`, `;`, `=`, `@`, or `|`, found `foo`
 
     assert_eq!(
       output.stdout(),
-      "%Efile:\\ %f,%Cline:\\ %l,%Ccolumn:\\ %c,%Cmessage:\\ %m,%Z---"
+      "%Efile:\\ %f,%Cline:\\ %l,%Ccolumn:\\ %c,%Cmessage:\\ %m,%Z---\n"
     );
   }
 }
