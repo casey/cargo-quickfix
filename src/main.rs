@@ -29,8 +29,16 @@ mod tests {
   use std::process::Command;
 
   #[test]
+  fn print_errors_to_stderr() {
+    let output = Environment::test().set_args(&["asdf"]).err();
+
+    assert_eq!(output.stdout(), "");
+    assert!(output.stderr().starts_with("error: "));
+  }
+
+  #[test]
   fn create_quickfix_file() {
-    let output = Environment::test().set_args(&["write"]).output();
+    let output = Environment::test().set_args(&["write"]).ok();
 
     assert!(output.dir().join(".errorfile").is_file());
   }
@@ -66,7 +74,7 @@ mod tests {
     let output = Environment::test()
       .set_args(&["write"])
       .set_stdin(&errors)
-      .output();
+      .ok();
 
     let errors = fs::read_to_string(output.dir().join(".errorfile")).unwrap();
 
@@ -85,7 +93,7 @@ message: expected one of `:`, `;`, `=`, `@`, or `|`, found `foo`
 
   #[test]
   fn print_errorformat() {
-    let output = Environment::test().set_args(&["errorformat"]).output();
+    let output = Environment::test().set_args(&["errorformat"]).ok();
 
     assert_eq!(
       output.stdout(),

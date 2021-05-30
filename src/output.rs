@@ -11,6 +11,10 @@ impl Output {
     &self.stdout
   }
 
+  pub(crate) fn stderr(&self) -> &str {
+    &self.stderr
+  }
+
   pub(crate) fn dir(&self) -> &Path {
     self.dir.as_ref().as_ref()
   }

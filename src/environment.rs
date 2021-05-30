@@ -80,9 +80,7 @@ impl Environment {
   }
 
   #[cfg(test)]
-  pub(crate) fn output(mut self) -> Output {
-    self.run().unwrap();
-
+  fn output(self) -> Output {
     Output {
       dir:    self.current_dir,
       stdout: str::from_utf8(self.stdout.as_ref().capture())
@@ -92,5 +90,17 @@ impl Environment {
         .unwrap()
         .to_owned(),
     }
+  }
+
+  #[cfg(test)]
+  pub(crate) fn ok(mut self) -> Output {
+    self.run().unwrap();
+    self.output()
+  }
+
+  #[cfg(test)]
+  pub(crate) fn err(mut self) -> Output {
+    self.run().unwrap_err();
+    self.output()
   }
 }
