@@ -2,9 +2,11 @@ use crate::common::*;
 
 mod common;
 mod environment;
+mod error;
 mod format_string;
 mod formatted_message;
 mod output_stream;
+mod result;
 mod subcommand;
 mod token;
 
@@ -12,7 +14,9 @@ mod token;
 mod output;
 
 fn main() {
-  Environment::main().run();
+  if let Err(code) = Environment::main().run() {
+    process::exit(code);
+  }
 }
 
 #[cfg(test)]

@@ -56,9 +56,14 @@ impl Environment {
     self.current_dir.as_ref().as_ref()
   }
 
-  pub(crate) fn run(mut self) {
+  pub(crate) fn run(mut self) -> Result<(), i32> {
     match Subcommand::from_iter_safe(&self.args) {
-      Ok(subcommand) => subcommand.run(&mut self),
+      Ok(subcommand) =>
+        if let Err(error) = subcommand.run(&mut self) {
+          Err(error.code())
+        } else {
+          Ok(())
+        },
       Err(error) => error.exit(),
     }
   }
@@ -67,7 +72,8 @@ impl Environment {
   pub(crate) fn output(mut self) -> Output {
     Subcommand::from_iter_safe(&self.args)
       .unwrap()
-      .run(&mut self);
+      .run(&mut self)
+      .unwrap();
 
     Output {
       dir:    self.current_dir,

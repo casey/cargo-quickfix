@@ -19,14 +19,14 @@ impl Subcommand {
     Token::Text("---"),
   ]);
 
-  pub(crate) fn run(self, environment: &mut Environment) {
+  pub(crate) fn run(self, environment: &mut Environment) -> Result<()> {
     match self {
       Self::Write => Self::write(environment),
       Self::Errorformat => Self::errorformat(environment),
     }
   }
 
-  fn write(environment: &mut Environment) {
+  fn write(environment: &mut Environment) -> Result<()> {
     let mut errorfile = File::create(environment.current_dir().join(".errorfile")).unwrap();
 
     let reader = BufReader::new(environment.stdin());
@@ -62,9 +62,13 @@ impl Subcommand {
         _ => (),
       }
     }
+
+    Ok(())
   }
 
-  fn errorformat(environment: &mut Environment) {
+  fn errorformat(environment: &mut Environment) -> Result<()> {
     write!(environment.stdout(), "{}", Self::ERROR).unwrap();
+
+    Ok(())
   }
 }

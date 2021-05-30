@@ -5,7 +5,7 @@ pub(crate) use std::{
   fs::File,
   io::{self, BufReader, Cursor, Read, Stdout, Write},
   path::Path,
-  str,
+  process, str,
 };
 
 pub(crate) use ::{
@@ -13,12 +13,14 @@ pub(crate) use ::{
     diagnostic::{DiagnosticLevel, DiagnosticSpan},
     Message,
   },
+  snafu::Snafu,
   structopt::StructOpt,
 };
 
 pub(crate) use crate::{
-  environment::Environment, format_string::FormatString, formatted_message::FormattedMessage,
-  output_stream::OutputStream, subcommand::Subcommand, token::Token,
+  environment::Environment, error::Error, format_string::FormatString,
+  formatted_message::FormattedMessage, output_stream::OutputStream, result::Result,
+  subcommand::Subcommand, token::Token,
 };
 
 #[cfg(test)]

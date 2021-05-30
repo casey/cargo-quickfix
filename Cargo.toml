@@ -16,4 +16,6 @@ tempfile = "3.2.0"
 
 [dependencies]
 cargo_metadata = "0.13.1"
+libc = "0.2.95"
+snafu = "0.6.10"
 structopt      = "0.3.21"
