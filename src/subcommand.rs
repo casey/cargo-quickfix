@@ -31,7 +31,7 @@ impl Subcommand {
 
     let mut errorfile = File::create(&path).context(error::Filesystem { path: &path })?;
 
-    let (stdin, _stdout, stderr) = environment.standard_streams();
+    let (stdin, stdout, stderr) = environment.standard_streams();
 
     let reader = BufReader::new(stdin);
 
@@ -56,6 +56,7 @@ impl Subcommand {
             }
           }
         },
+        Message::TextLine(line) => writeln!(stdout, "{}", line).context(error::Stdout)?,
         _ => {},
       }
     }

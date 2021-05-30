@@ -29,7 +29,14 @@ mod tests {
   use std::process::Command;
 
   #[test]
-  fn print_text_lines_to_stdout() {}
+  fn print_text_lines_to_stdout() {
+    let output = Environment::test()
+      .set_args(&["write"])
+      .set_stdin(&"hello\n")
+      .ok();
+
+    assert_eq!(output.stdout(), "hello\n");
+  }
 
   #[test]
   fn print_compiler_messages_to_stderr() {
