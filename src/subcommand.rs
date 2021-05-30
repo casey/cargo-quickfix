@@ -19,20 +19,23 @@ impl Subcommand {
     Token::Text("---"),
   ]);
 
-  pub(crate) fn run(self, environment: &mut Environment) {
+  pub(crate) fn run(self, environment: &mut Environment) -> Result<()> {
     match self {
       Self::Write => Self::write(environment),
       Self::Errorformat => Self::errorformat(environment),
     }
   }
 
-  fn write(environment: &mut Environment) {
-    let mut errorfile = File::create(environment.current_dir().join(".errorfile")).unwrap();
+  fn write(environment: &mut Environment) -> Result<()> {
+    let path = environment.current_dir().join(".errorfile");
+
+    let mut errorfile = File::create(&path).context(error::Filesystem { path: &path })?;
 
     let reader = BufReader::new(environment.stdin());
 
-    for message in Message::parse_stream(reader) {
-      match message.unwrap() {
+    for result in Message::parse_stream(reader) {
+      let message = result.context(error::Stdin)?;
+      match message {
         Message::BuildFinished(finished) => {
           println!("{:?}", finished);
         },
@@ -51,8 +54,10 @@ impl Subcommand {
                 "{}",
                 Self::ERROR.format(span, &message.message.message)
               )
-              .unwrap();
-              errorfile.flush().unwrap();
+              .context(error::Filesystem { path: &path })?;
+              errorfile
+                .flush()
+                .context(error::Filesystem { path: &path })?;
             }
           }
         },
@@ -62,9 +67,12 @@ impl Subcommand {
         _ => (),
       }
     }
+
+    Ok(())
   }
 
-  fn errorformat(environment: &mut Environment) {
-    write!(environment.stdout(), "{}", Self::ERROR).unwrap();
+  fn errorformat(environment: &mut Environment) -> Result<()> {
+    outln!(environment, "{}", Self::ERROR)?;
+    Ok(())
   }
 }
