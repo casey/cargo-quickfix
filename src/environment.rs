@@ -34,12 +34,18 @@ impl Environment {
     Self::production().print()?.run()
   }
 
-  pub(crate) fn stdout(&mut self) -> &mut dyn OutputStream {
-    self.stdout.as_mut()
+  pub(crate) fn standard_streams(
+    &mut self,
+  ) -> (&mut dyn Read, &mut dyn OutputStream, &mut dyn OutputStream) {
+    (
+      self.stdin.as_mut(),
+      self.stdout.as_mut(),
+      self.stderr.as_mut(),
+    )
   }
 
-  pub(crate) fn stdin(&mut self) -> &mut dyn Read {
-    self.stdin.as_mut()
+  pub(crate) fn stdout(&mut self) -> &mut dyn OutputStream {
+    self.stdout.as_mut()
   }
 
   #[cfg(test)]

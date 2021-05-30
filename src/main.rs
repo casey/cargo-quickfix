@@ -29,6 +29,45 @@ mod tests {
   use std::process::Command;
 
   #[test]
+  fn print_text_lines_to_stdout() {}
+
+  #[test]
+  fn print_compiler_messages_to_stderr() {
+    let tempdir = tempfile::tempdir().unwrap();
+
+    let output = Command::new("cargo")
+      .args(&["init", "--name", "foo"])
+      .arg(tempdir.path())
+      .output()
+      .unwrap();
+
+    assert!(output.status.success());
+
+    fs::write(
+      tempdir.path().join("src/main.rs"),
+      "fn main() {\n  let foo foo;\n}\n",
+    )
+    .unwrap();
+
+    let output = Command::new("cargo")
+      .args(&["check", "--message-format=json"])
+      .current_dir(tempdir.path())
+      .output()
+      .unwrap();
+
+    assert!(!output.status.success());
+
+    let errors = str::from_utf8(&output.stdout).unwrap();
+
+    let output = Environment::test()
+      .set_args(&["write"])
+      .set_stdin(&errors)
+      .ok();
+
+    assert!(output.stderr().starts_with("error: expected one of"));
+  }
+
+  #[test]
   fn print_errors_to_stderr() {
     let output = Environment::test().set_args(&["asdf"]).err();
 

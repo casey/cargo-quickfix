@@ -31,22 +31,17 @@ impl Subcommand {
 
     let mut errorfile = File::create(&path).context(error::Filesystem { path: &path })?;
 
-    let reader = BufReader::new(environment.stdin());
+    let (stdin, _stdout, stderr) = environment.standard_streams();
+
+    let reader = BufReader::new(stdin);
 
     for result in Message::parse_stream(reader) {
       let message = result.context(error::Stdin)?;
       match message {
-        Message::BuildFinished(finished) => {
-          println!("{:?}", finished);
-        },
-        Message::BuildScriptExecuted(script) => {
-          println!("{:?}", script);
-        },
-        Message::CompilerArtifact(artifact) => {
-          println!("{:?}", artifact);
-        },
         Message::CompilerMessage(message) => {
-          println!("{:?}", message);
+          if let Some(rendered) = message.message.rendered {
+            writeln!(stderr, "{}", rendered).context(error::Stderr)?;
+          }
           if message.message.level == DiagnosticLevel::Error {
             if let Some(span) = message.message.spans.iter().find(|span| span.is_primary) {
               writeln!(
@@ -61,10 +56,7 @@ impl Subcommand {
             }
           }
         },
-        Message::TextLine(line) => {
-          println!("{}", line);
-        },
-        _ => (),
+        _ => {},
       }
     }
 
