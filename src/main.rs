@@ -17,10 +17,53 @@ mod token;
 #[cfg(test)]
 mod output;
 
-fn main() {
-  if let Err(code) = Environment::main() {
-    process::exit(code);
+struct Tee {
+  file: Writer<File>,
+}
+
+impl Write for Tee {
+  fn open(path: &str) -> io::Result<Self> {
+    Ok(Writer::new(File::create(path)?))
   }
+
+  fn write(&mut self, bytes: &[u8]) -> Result<usize> {
+    io::stderr()::write_all(bytes)?;
+    self.file.write_all(bytes)?;
+    Ok(bytes.len())
+  }
+}
+
+fn run() -> Result<()> {
+  let child = Command::new("cargo")
+    .args(&["--color", "--always"])
+    .args(env::args_os().skip(2))
+    .stderr(Stdio::piped())
+    .spawn()
+    .context(error::Spawn)?;
+  
+  let tee = Tee::open(".errors.txt").context(error::Filesystem)?;
+
+  io::copy(
+    child.stderr.as_mut().unwrap(),
+    &mut tee,
+  )
+  .context(error::Copy)?;
+
+  let status = child.wait().context(error::Wait)?; 
+  
+  if !status.is_success() {
+    process::exit(status.code().unwrap_or(libc::EXIT_FAILURE))
+  }
+}
+
+fn main() {
+
+
+
+  // - rename to cargo-quickfix
+  // - document how to use it
+  // - shortcut to go to next error and wrap
+  // - go to error without showing message
 }
 
 #[cfg(test)]
