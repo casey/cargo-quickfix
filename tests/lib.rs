@@ -60,10 +60,14 @@ fn propagate_command_stderr() {
 
   assert!(!output.status.success());
 
-  let stderr = String::from_utf8(strip(output.stderr).unwrap()).unwrap();
+  let stderr = str::from_utf8(&output.stderr).unwrap();
 
-  assert_contains(&stderr, "Compiling project");
-  assert_contains(&stderr, "error: expected one of");
+  let stripped = String::from_utf8(strip(stderr.as_bytes()).unwrap()).unwrap();
+
+  assert_ne!(stderr, stripped);
+
+  assert_contains(&stripped, "Compiling project");
+  assert_contains(&stripped, "error: expected one of");
 }
 
 #[test]
