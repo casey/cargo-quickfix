@@ -56,6 +56,8 @@ Useful commands include:
 
 See `:help quickfix` for information.
 
+Optionally, install the [vim-qf](https://github.com/romainl/vim-qf) plugin for additional mappings and functionality.
+
 ## Ignoring `.errors.txt`
 
 To avoid committing `.errors.txt` or seeing it in `git diff` and `git status`, you can add it to your repositories `.gitignore`.
