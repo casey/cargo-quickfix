@@ -5,6 +5,7 @@ use std::{
   str,
 };
 
+use strip_ansi_escapes::strip;
 use test_context::TestContext;
 
 mod test_context;
@@ -61,8 +62,12 @@ fn propagate_command_stderr() {
 
   let stderr = str::from_utf8(&output.stderr).unwrap();
 
-  assert_contains(stderr, "Compiling\u{1b}[0m project");
-  assert_contains(stderr, "error\u{1b}[0m\u{1b}[0m\u{1b}[1m: expected one of");
+  let stripped = String::from_utf8(strip(stderr.as_bytes()).unwrap()).unwrap();
+
+  assert_ne!(stderr, stripped);
+
+  assert_contains(&stripped, "Compiling project");
+  assert_contains(&stripped, "error: expected one of");
 }
 
 #[test]

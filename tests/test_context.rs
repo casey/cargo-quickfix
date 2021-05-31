@@ -37,7 +37,9 @@ impl TestContext {
 
     fs::copy(
       executable_path("cargo-quickfix"),
-      bin.path().join("cargo-quickfix-test"),
+      bin
+        .path()
+        .join(format!("cargo-quickfix-test{}", env::consts::EXE_SUFFIX)),
     )
     .unwrap();
 

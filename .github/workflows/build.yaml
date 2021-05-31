@@ -98,4 +98,4 @@ jobs:
     - name: Install
       run: |
         cargo install --path .
-        quickfix --version
+        cargo quickfix version
