@@ -82,9 +82,6 @@ jobs:
         profile: minimal
         components: rustfmt
 
-    - name: Format
-      run: cargo +nightly fmt --all -- --check
-
     - name: Check Formatting
       run: cargo +nightly fmt --all -- --check
 
