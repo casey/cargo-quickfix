@@ -20,6 +20,7 @@ log                = "0.4.14"
 snafu              = "0.6.10"
 strip-ansi-escapes = "0.1.0"
 structopt          = "0.3.21"
+term_size          = "0.3.2"
 
 [dev-dependencies]
 executable-path = "1.0.0"

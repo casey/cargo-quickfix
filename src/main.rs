@@ -31,6 +31,12 @@ fn run() -> Result<()> {
     .env("CARGO_TERM_COLOR", "always")
     .stderr(Stdio::piped());
 
+  if let Some((width, _height)) = term_size::dimensions() {
+    command
+      .env("CARGO_TERM_PROGRESS_WHEN", "always")
+      .env("CARGO_TERM_PROGRESS_WIDTH", &width.to_string());
+  }
+
   let mut child = command.spawn().with_context(|| error::Spawn {
     arguments: arguments.clone(),
     command:   CARGO,
